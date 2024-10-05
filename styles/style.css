@@ -138,3 +138,71 @@ body {
 .game-reset:hover {
     opacity: .5;
 }
+
+@keyframes showdoor-opacity {
+    from { opacity: 0 }
+    to { opacity: 1 }
+}
+
+@keyframes showdoor-position {
+    from { translate: 0 200% }
+    to { translate: 0 0 }
+}
+
+.victory-modal {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: rgb(16, 0, 19);
+    position: absolute;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation-name: showdoor-opacity;
+    animation-timing-function: ease-in-out;
+    animation-duration: 2s
+}
+
+.victory-modal.is-active {
+    display: flex;
+}
+
+.victory-modal__img {
+    width: 70%;
+    max-width: 600px;
+    position: absolute;
+}
+
+.victory-modal__img--stage1 {
+    animation-name: showdoor-position;
+    animation-duration: 3s;
+    animation-timing-function: cubic-bezier( 0.68, -0.55, 0.265, 1.55 );
+    animation-delay: 2s;
+    animation-fill-mode: both;
+}
+
+.victory-modal__img--stage2 {
+    opacity: 0;
+    animation-name: showdoor-opacity;
+    animation-duration: 4s;
+    animation-timing-function: ease-in-out;
+    animation-delay: 5s;
+    animation-fill-mode: both;
+}
+
+.victory-modal__reset {
+    width: 30%;
+    max-width: 50px;
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    opacity: .2;
+    transition: ease .5s;
+}
+
+.victory-modal__reset:hover {
+    opacity: .3;
+}
