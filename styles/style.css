@@ -19,10 +19,48 @@ body {
     place-items: center;
     grid-template-rows: 1fr;
     grid-template-columns: 1fr 3fr 1fr;
-    align-items: flex-start;
+    place-items: center;
     background: rgb(16, 2, 29) url('../img/bg-img.jpg') repeat center;
     background-size: contain;
+    gap: 1%;
     padding: 2rem;
+}
+
+.game-help {
+    width: 100%;
+    text-align: center;
+    padding: 0 5%;
+}
+
+.game-help__button {
+    width: 40%;
+    max-width: 125px;
+    height: auto;
+    background-color: transparent;
+    border: none;
+    margin-bottom: 15%;
+    opacity: 0;
+    transition: ease 2s;
+    visibility: hidden;
+}
+
+.game-help__button.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.game-help__button:hover {
+    opacity: .35;
+}
+
+.game-help__tip-img {
+    width: 100%;
+    opacity: .15;
+    visibility: hidden;
+}
+
+.game-help__tip-img.is-active {
+    visibility: visible;
 }
 
 .game-table {
@@ -31,7 +69,6 @@ body {
     width: 100%;
     background: url('../img/table.png') center no-repeat;
     background-size: contain;
-    background-color: aquamarine;
     align-self: center;
     display: flex;
     align-items: center;
@@ -39,7 +76,6 @@ body {
 }
 
 .game-table__container {
-    background-color: rgb(255, 99, 71, .25);
     width: 74%;
     height: 88%;
     display: grid;
@@ -54,7 +90,6 @@ body {
     max-width: 150px;
     height: auto;
     position: relative;
-    background-color: rgba(71, 255, 132, 0.5);
     transition: ease-in .3s;
 }
 
@@ -89,4 +124,17 @@ body {
 .game-table__img--stage2.is-active,
 .game-table__img--stage3.is-active {
     opacity: 1;
+}
+
+.game-reset {
+    width: 50%;
+    max-width: 80px;
+    background-color: transparent;
+    border: none;
+    opacity: .3;
+    transition: ease 1s;
+}
+
+.game-reset:hover {
+    opacity: .5;
 }
