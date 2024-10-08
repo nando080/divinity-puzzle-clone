@@ -88,7 +88,7 @@ body {
 .game-table__button {
     width: 100%;
     max-width: 150px;
-    height: auto;
+    height: max-content;
     position: relative;
     transition: ease-in .3s;
     border: none;
@@ -121,6 +121,14 @@ body {
     opacity: 0;
 }
 
+.game-table__img--active {
+    opacity: 0;
+}
+
+.game-table__img--active.is-active {
+    opacity: 1;
+}
+
 .game-table__img--stage1.is-active,
 .game-table__img--stage2.is-active,
 .game-table__img--stage3.is-active {
@@ -140,7 +148,7 @@ body {
     opacity: .5;
 }
 
-@keyframes showdoor-opacity {
+@keyframes show-opacity {
     from { opacity: 0 }
     to { opacity: 1 }
 }
@@ -160,7 +168,7 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    animation-name: showdoor-opacity;
+    animation-name: show-opacity;
     animation-timing-function: ease-in-out;
     animation-duration: 2s
 }
