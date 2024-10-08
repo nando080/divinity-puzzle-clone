@@ -12,124 +12,78 @@ const cellStyles = [
 
 const gameTableCells = []
 
-const gameTableData = []
-
-const handleButtonActivation = clickedButton => {
-    const cellImages = Array.from(clickedButton.children)
-    const currentButtonStatus = clickedButton.dataset.status
-    cellImages.forEach(image => {
-        const isActivationImage = image.classList.contains('game-table__img--active')
-        if (isActivationImage) {
-            switch(currentButtonStatus) {
-                case 'inactive':
-                    image.classList.add('is-active')
-                    clickedButton.dataset.status = 'active'
-                    break
-                case 'active':
-                    image.classList.remove('is-active')
-                    clickedButton.dataset.status = 'inactive'
-                    break
-            }
-        }
-    })
-}
-
-const createTableData = () => {
+const getAdjacentAddresses = () => {
+    const adresses = []
     for (let rowIndex = 0; rowIndex < tableRows; rowIndex++) {
-        const currentData = []
+        const currentRow = []
         for (let columnIndex = 0; columnIndex < tableColumns; columnIndex++) {
-            const currentDataItem = {
-                rowIndex: rowIndex,
-                columnIndex: columnIndex,
-                currentStage: 0,
-                isActive: false,
-                adjacentItems: []
-            }
-            currentData.push(currentDataItem)
-        }
-        gameTableData.push(currentData)
-    }
-}
-
-const setAdjacentItems = () => {
-    gameTableData.forEach(dataRow => {
-        dataRow.forEach(( {rowIndex, columnIndex, adjacentItems} ) => {
+            const currentColumn = []
             if (rowIndex > 0) {
-                adjacentItems.push({rowIndex: rowIndex - 1, columnIndex: columnIndex})
+                currentColumn.push([rowIndex - 1, columnIndex])
             }
             if (rowIndex < tableRows - 1) {
-                adjacentItems.push({rowIndex: rowIndex + 1, columnIndex: columnIndex})
+                currentColumn.push([rowIndex + 1, columnIndex])
             }
             if (columnIndex > 0) {
-                adjacentItems.push({rowIndex: rowIndex, columnIndex: columnIndex - 1})
+                currentColumn.push([rowIndex , columnIndex - 1])
             }
             if (columnIndex < tableColumns - 1) {
-                adjacentItems.push({rowIndex: rowIndex, columnIndex: columnIndex + 1})
+                currentColumn.push([rowIndex , columnIndex + 1])
             }
-        })
-    })
-}
-
-const initializeTableData = () => {
-    createTableData()
-    setAdjacentItems()
-}
-
-const updateTableDataByAdjacent = (clickedButton, operation) => {
-    clickedButton.adjacentItems.forEach(adjacentItem => {
-        const {rowIndex, columnIndex} = adjacentItem
-        switch(operation) {
-            case 'increase':
-                gameTableData[rowIndex][columnIndex].currentStage++
-                break
-                case 'decrease':
-                    if (gameTableData[rowIndex][columnIndex].currentStage > 0) {
-                        gameTableData[rowIndex][columnIndex].currentStage--
-                    }
-                break
-        }
-    })
-}
-
-const updateTableDataByClick = (rowIndex, columnIndex) => {
-    const clickedData = gameTableData[rowIndex][columnIndex]
-    let adjacentItemsOperation = 'increase'
-    if (clickedData.isActive) {
-        clickedData.isActive = false
-        clickedData.currentStage--
-        adjacentItemsOperation = 'decrease'
-    } else {
-        clickedData.isActive = true
-        clickedData.currentStage++
+            currentRow.push(currentColumn)
+        } 
+        adresses.push(currentRow)
     }
-    updateTableDataByAdjacent(clickedData, adjacentItemsOperation)
+    return adresses
 }
 
 //TODO - COMPLETAR
 
-const updateGameTableCells = () => {
-    gameTableData.forEach(row => {
-        row.forEach(cell => {
-            const { currentStage, rowIndex, columnIndex } = cell
-            const cellImages = Array.from(gameTableCells[rowIndex][columnIndex].children)
-            if (currentStage === 1) {
-                cellImages.forEach(image => {
-                    if (image.classList.contains('game-table__img--stage1')) {
-                        image.classList.add('is-active')
-                    }
-                })
-            }
-        })
+const updateAdjacentCells = currentCell => {
+    const currentCellRow = currentCell.dataset.rowindex
+    const currentCellColumn = currentCell.dataset.columnindex
+    const currentCellStatus = currentCell.dataset.status
+    const currentCellAdjacents = getAdjacentAddresses()[currentCellRow][currentCellColumn]
+    currentCellAdjacents.forEach(adjacentCellAdress => {
+        const targetCellStage = gameTableCells[adjacentCellAdress[0]][adjacentCellAdress[1]].dataset.currentState
+        const targetCellNumericState = Number(targetCellStage)
+        switch (currentCellStatus) {
+            case 'inactive':
+                if (targetCellNumericState > 0) {
+                    gameTableCells[adjacentCellAdress[0]][adjacentCellAdress[1]].dataset.currentState = targetCellNumericState + 1
+                }
+                break
+            case 'active':
+                gameTableCells[adjacentCellAdress[0]][adjacentCellAdress[1]].dataset.currentState = targetCellNumericState + 1
+                break
+        }
     })
+}
+
+const updateClickedCellDataset = clickedCell => {
+    const clickedCellDataset = clickedCell.dataset
+    const currentStatus = clickedCellDataset.status
+    const numberCurrentState = Number(clickedCellDataset.currentState)
+    switch (currentStatus) {
+        case 'inactive':
+            clickedCellDataset.status = 'active'
+            clickedCellDataset.currentState = numberCurrentState + 1
+            break
+        case 'active':
+            clickedCellDataset.status = 'inactive'
+            if (numberCurrentState > 0) {
+                clickedCellDataset.currentState = numberCurrentState - 1
+            }
+            break
+    }
+    updateAdjacentCells(clickedCell)
 }
 
 const handleCellClick = event => {
     const clickedButton = event.target.parentElement
     const clickedButtonRow = Number(clickedButton.dataset.rowindex)
     const clickedButtonColumn = Number(clickedButton.dataset.columnindex)
-    handleButtonActivation(clickedButton)
-    updateTableDataByClick(clickedButtonRow, clickedButtonColumn)
-    updateGameTableCells()
+    updateClickedCellDataset(clickedButton)
 }
 
 const createGameTableCells = () => {
@@ -141,6 +95,7 @@ const createGameTableCells = () => {
             currentCell.dataset.rowindex = rowIndex
             currentCell.dataset.columnindex = columnIndex
             currentCell.dataset.status = 'inactive'
+            currentCell.dataset.currentState = '0'
             const currentButtonStyle = cellStyles[rowIndex][columnIndex]
             currentCell.innerHTML = `
             <img src="img/stone buttons/active-effect.png" class="game-table__img game-table__img--active">
@@ -165,7 +120,6 @@ const insertGameTableCellsIntoDOM = () => {
 }
 
 const initializeGame = () => {
-    initializeTableData()
     createGameTableCells()
     insertGameTableCellsIntoDOM()
 }
