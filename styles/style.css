@@ -63,7 +63,7 @@ body {
     visibility: visible;
 }
 
-.game-table {
+.game-board {
     aspect-ratio: 9.5 / 8;
     max-width: 950px;
     width: 100%;
@@ -75,7 +75,7 @@ body {
     justify-content: center;
 }
 
-.game-table__container {
+.game-board__container {
     width: 74%;
     height: 88%;
     display: grid;
@@ -85,7 +85,7 @@ body {
     gap: 2.35%;
 }
 
-.game-table__button {
+.game-board__button {
     width: 100%;
     max-width: 150px;
     height: max-content;
@@ -94,44 +94,44 @@ body {
     border: none;
 }
 
-.game-table__button:hover {
+.game-board__button:hover {
     scale: .97;
 }
 
-.game-table__img {
+.game-board__img {
     width: 100%;
     position: absolute;
     translate: -50% -50%;
     transition: ease-in .3;
 }
 
-.game-table__img--stage0 {
+.game-board__img--stage0 {
     z-index: 0;
 }
-.game-table__img--stage1 {
+.game-board__img--stage1 {
     z-index: 100;
     opacity: 0;
 }
-.game-table__img--stage2 {
+.game-board__img--stage2 {
     z-index: 200;
     opacity: 0;
 }
-.game-table__img--stage3 {
+.game-board__img--stage3 {
     z-index: 300;
     opacity: 0;
 }
 
-.game-table__img--active {
+.game-board__img--active {
     opacity: 0;
 }
 
-.game-table__img--active.is-active {
+.game-board__img--active.is-active {
     opacity: 1;
 }
 
-.game-table__img--stage1.is-active,
-.game-table__img--stage2.is-active,
-.game-table__img--stage3.is-active {
+.game-board__img--stage1.is-active,
+.game-board__img--stage2.is-active,
+.game-board__img--stage3.is-active {
     opacity: 1;
 }
 

@@ -1,7 +1,7 @@
-const gameTableContainer = document.querySelector('.game-table__container')
+const gameTableContainer = document.querySelector('.game-board__container')
 
-const tableRows = 4
-const tableColumns = 4
+const boardRows = 4
+const boardColuns = 4
 
 const cellStyles = [
     [2, 3, 2, 1],
@@ -10,24 +10,24 @@ const cellStyles = [
     [3, 4, 1, 2],
 ]
 
-const gameTableCells = []
+const gameButtons = []
 
 const getAdjacentAddresses = () => {
     const adresses = []
-    for (let rowIndex = 0; rowIndex < tableRows; rowIndex++) {
+    for (let rowIndex = 0; rowIndex < boardRows; rowIndex++) {
         const currentRow = []
-        for (let columnIndex = 0; columnIndex < tableColumns; columnIndex++) {
+        for (let columnIndex = 0; columnIndex < boardColuns; columnIndex++) {
             const currentColumn = []
             if (rowIndex > 0) {
                 currentColumn.push([rowIndex - 1, columnIndex])
             }
-            if (rowIndex < tableRows - 1) {
+            if (rowIndex < boardRows - 1) {
                 currentColumn.push([rowIndex + 1, columnIndex])
             }
             if (columnIndex > 0) {
                 currentColumn.push([rowIndex , columnIndex - 1])
             }
-            if (columnIndex < tableColumns - 1) {
+            if (columnIndex < boardColuns - 1) {
                 currentColumn.push([rowIndex , columnIndex + 1])
             }
             currentRow.push(currentColumn)
@@ -37,82 +37,43 @@ const getAdjacentAddresses = () => {
     return adresses
 }
 
-//TODO - COMPLETAR
-
-const updateAdjacentCells = currentCell => {
-    const currentCellRow = currentCell.dataset.rowindex
-    const currentCellColumn = currentCell.dataset.columnindex
-    const currentCellStatus = currentCell.dataset.status
-    const currentCellAdjacents = getAdjacentAddresses()[currentCellRow][currentCellColumn]
-    currentCellAdjacents.forEach(adjacentCellAdress => {
-        const targetCellStage = gameTableCells[adjacentCellAdress[0]][adjacentCellAdress[1]].dataset.currentState
-        const targetCellNumericState = Number(targetCellStage)
-        switch (currentCellStatus) {
-            case 'inactive':
-                if (targetCellNumericState > 0) {
-                    gameTableCells[adjacentCellAdress[0]][adjacentCellAdress[1]].dataset.currentState = targetCellNumericState + 1
-                }
-                break
-            case 'active':
-                gameTableCells[adjacentCellAdress[0]][adjacentCellAdress[1]].dataset.currentState = targetCellNumericState + 1
-                break
-        }
-    })
+const updateClickedButtonStatus = clickedButton => {
+    const currentStatus = clickedButton.dataset.status
+    currentStatus = 'olá'
 }
 
-const updateClickedCellDataset = clickedCell => {
-    const clickedCellDataset = clickedCell.dataset
-    const currentStatus = clickedCellDataset.status
-    const numberCurrentState = Number(clickedCellDataset.currentState)
-    switch (currentStatus) {
-        case 'inactive':
-            clickedCellDataset.status = 'active'
-            clickedCellDataset.currentState = numberCurrentState + 1
-            break
-        case 'active':
-            clickedCellDataset.status = 'inactive'
-            if (numberCurrentState > 0) {
-                clickedCellDataset.currentState = numberCurrentState - 1
-            }
-            break
-    }
-    updateAdjacentCells(clickedCell)
-}
-
-const handleCellClick = event => {
+const handleButtonClick = event => {
     const clickedButton = event.target.parentElement
-    const clickedButtonRow = Number(clickedButton.dataset.rowindex)
-    const clickedButtonColumn = Number(clickedButton.dataset.columnindex)
-    updateClickedCellDataset(clickedButton)
+    
 }
 
-const createGameTableCells = () => {
-    for (let rowIndex = 0; rowIndex < tableRows; rowIndex++) {
+const createGameButtons = () => {
+    for (let rowIndex = 0; rowIndex < boardRows; rowIndex++) {
         const currentRow = []
-        for (let columnIndex = 0; columnIndex < tableColumns; columnIndex++) {
-            const currentCell = document.createElement('button')
-            currentCell.classList.add('game-table__button')
-            currentCell.dataset.rowindex = rowIndex
-            currentCell.dataset.columnindex = columnIndex
-            currentCell.dataset.status = 'inactive'
-            currentCell.dataset.currentState = '0'
+        for (let columnIndex = 0; columnIndex < boardColuns; columnIndex++) {
+            const currentButton = document.createElement('button')
+            currentButton.classList.add('game-board__button')
+            currentButton.dataset.row = rowIndex
+            currentButton.dataset.colum = columnIndex
+            currentButton.dataset.status = 'inactive'
+            currentButton.dataset.stage = '0'
             const currentButtonStyle = cellStyles[rowIndex][columnIndex]
-            currentCell.innerHTML = `
-            <img src="img/stone buttons/active-effect.png" class="game-table__img game-table__img--active">
-            <img src="img/stone buttons/stage-0-mod-${currentButtonStyle}.png" class="game-table__img game-table__img--stage0">
-            <img src="img/stone buttons/stage-1-mod-${currentButtonStyle}.png" class="game-table__img game-table__img--stage1">
-            <img src="img/stone buttons/stage-2-mod-${currentButtonStyle}.png" class="game-table__img game-table__img--stage2">
-            <img src="img/stone buttons/stage-3-mod-${currentButtonStyle}.png" class="game-table__img game-table__img--stage3">    
+            currentButton.innerHTML = `
+            <img src="img/stone buttons/active-effect.png" class="game-board__img game-board__img--active">
+            <img src="img/stone buttons/stage-3-mod-${currentButtonStyle}.png" class="game-board__img game-board__img--stage3">    
+            <img src="img/stone buttons/stage-2-mod-${currentButtonStyle}.png" class="game-board__img game-board__img--stage2">
+            <img src="img/stone buttons/stage-1-mod-${currentButtonStyle}.png" class="game-board__img game-board__img--stage1">
+            <img src="img/stone buttons/stage-0-mod-${currentButtonStyle}.png" class="game-board__img game-board__img--stage0">
             `
-            currentCell.addEventListener('click', handleCellClick)
-            currentRow.push(currentCell)
+            currentButton.addEventListener('click', handleButtonClick)
+            currentRow.push(currentButton)
         }       
-        gameTableCells.push(currentRow)
+        gameButtons.push(currentRow)
     }
 }
 
-const insertGameTableCellsIntoDOM = () => {
-    gameTableCells.forEach(row => {
+const insertButtonsIntoDOM = () => {
+    gameButtons.forEach(row => {
         row.forEach(cell => {
             gameTableContainer.appendChild(cell)
         })
@@ -120,8 +81,8 @@ const insertGameTableCellsIntoDOM = () => {
 }
 
 const initializeGame = () => {
-    createGameTableCells()
-    insertGameTableCellsIntoDOM()
+    createGameButtons()
+    insertButtonsIntoDOM()
 }
 
 initializeGame()
